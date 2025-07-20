@@ -27,83 +27,223 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .login-bg {
+            background: linear-gradient(135deg, #5D5CDE 0%, #4F46E5 100%);
+        }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 h-full">
-    <!-- 导航栏 -->
-    <nav class="bg-primary text-white p-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">商品管理系统</h1>
-            <div class="flex items-center space-x-4">
-                <select id="userRole" class="bg-white text-gray-900 px-3 py-1 rounded text-base">
-                    <option value="admin">管理员</option>
-                    <option value="employee">员工</option>
-                </select>
-                <span id="userStatus" class="text-sm">当前身份: 管理员</span>
-            </div>
-        </div>
-    </nav>
+    
+    <!-- 登录界面 -->
+    <div id="loginScreen" class="min-h-screen login-bg flex items-center justify-center px-4">
+        <div class="max-w-md w-full">
+            <!-- 登录卡片 -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">商品管理系统</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">请登录您的账户</p>
+                </div>
 
-    <div class="container mx-auto p-4 max-w-6xl">
-        <!-- 搜索和操作栏 -->
-        <div class="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div class="flex-1 w-full sm:max-w-md">
-                <input type="text" id="searchInput" placeholder="搜索商品名称..." 
-                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-base focus:ring-2 focus:ring-primary focus:border-transparent">
-            </div>
-            <div class="flex gap-2">
-                <button id="addProductBtn" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                    添加商品
-                </button>
-                <button id="manageCategoriesBtn" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
-                    管理分类
-                </button>
-            </div>
-        </div>
+                <!-- 登录表单 -->
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            用户名
+                        </label>
+                        <input type="text" id="loginUsername" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请输入用户名">
+                    </div>
 
-        <!-- 商品统计 -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <h3 class="text-blue-600 dark:text-blue-400 font-semibold">总商品数</h3>
-                <p id="totalProducts" class="text-2xl font-bold text-blue-700 dark:text-blue-300">0</p>
-            </div>
-            <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <h3 class="text-green-600 dark:text-green-400 font-semibold">在售商品</h3>
-                <p id="availableProducts" class="text-2xl font-bold text-green-700 dark:text-green-300">0</p>
-            </div>
-            <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-                <h3 class="text-red-600 dark:text-red-400 font-semibold">已售商品</h3>
-                <p id="soldProducts" class="text-2xl font-bold text-red-700 dark:text-red-300">0</p>
-            </div>
-        </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            密码
+                        </label>
+                        <input type="password" id="loginPassword" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请输入密码">
+                    </div>
 
-        <!-- 商品列表 -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">图片</th>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">商品名称</th>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">分类</th>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">售价</th>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">库存</th>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">状态</th>
-                            <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productTableBody" class="divide-y divide-gray-200 dark:divide-gray-600">
-                        <!-- 商品列表将在这里动态生成 -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="emptyState" class="text-center py-12 hidden">
-                <p class="text-gray-500 dark:text-gray-400">暂无商品数据</p>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="rememberMe" class="rounded border-gray-300 text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">记住我</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium">
+                        登录
+                    </button>
+                </form>
+
+                <!-- 快速登录选项 -->
+                <div class="mt-6 border-t border-gray-200 dark:border-gray-600 pt-6">
+                    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">快速登录</p>
+                    <div class="space-y-2">
+                        <button onclick="quickLogin('admin')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                            管理员登录 (admin/123456)
+                        </button>
+                        <button onclick="quickLogin('employee')" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors text-sm">
+                            员工登录 (staff/123456)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 注册链接 -->
+                <div class="mt-6 text-center">
+                    <button onclick="showRegisterForm()" class="text-primary hover:underline text-sm">
+                        还没有账户？点击注册
+                    </button>
+                </div>
+
+                <!-- 登录错误提示 -->
+                <div id="loginError" class="mt-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-lg text-red-700 dark:text-red-300 text-sm hidden">
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 添加/编辑商品模态框 -->
+    <!-- 注册界面 -->
+    <div id="registerScreen" class="min-h-screen login-bg flex items-center justify-center px-4 hidden">
+        <div class="max-w-md w-full">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">创建账户</h1>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">注册新的管理账户</p>
+                </div>
+
+                <form id="registerForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            用户名
+                        </label>
+                        <input type="text" id="registerUsername" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请输入用户名">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            密码
+                        </label>
+                        <input type="password" id="registerPassword" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请输入密码（至少6位）">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            确认密码
+                        </label>
+                        <input type="password" id="confirmPassword" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="请再次输入密码">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            角色
+                        </label>
+                        <select id="registerRole" required 
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="employee">员工</option>
+                            <option value="admin">管理员</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium">
+                        注册
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <button onclick="showLoginForm()" class="text-primary hover:underline text-sm">
+                        已有账户？返回登录
+                    </button>
+                </div>
+
+                <div id="registerError" class="mt-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-600 rounded-lg text-red-700 dark:text-red-300 text-sm hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主应用界面 -->
+    <div id="mainApp" class="hidden">
+        <!-- 导航栏 -->
+        <nav class="bg-primary text-white p-4 shadow-lg">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-xl font-bold">商品管理系统</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="userWelcome" class="text-sm"></span>
+                    <span id="userRoleBadge" class="px-2 py-1 bg-white/20 rounded-full text-xs"></span>
+                    <button id="logoutBtn" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded transition-colors text-sm">
+                        退出登录
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mx-auto p-4 max-w-6xl">
+            <!-- 搜索和操作栏 -->
+            <div class="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                <div class="flex-1 w-full sm:max-w-md">
+                    <input type="text" id="searchInput" placeholder="搜索商品名称..." 
+                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-base focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+                <div class="flex gap-2">
+                    <button id="addProductBtn" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                        添加商品
+                    </button>
+                    <button id="manageCategoriesBtn" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                        管理分类
+                    </button>
+                </div>
+            </div>
+
+            <!-- 商品统计 -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <h3 class="text-blue-600 dark:text-blue-400 font-semibold">总商品数</h3>
+                    <p id="totalProducts" class="text-2xl font-bold text-blue-700 dark:text-blue-300">0</p>
+                </div>
+                <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <h3 class="text-green-600 dark:text-green-400 font-semibold">在售商品</h3>
+                    <p id="availableProducts" class="text-2xl font-bold text-green-700 dark:text-green-300">0</p>
+                </div>
+                <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+                    <h3 class="text-red-600 dark:text-red-400 font-semibold">已售商品</h3>
+                    <p id="soldProducts" class="text-2xl font-bold text-red-700 dark:text-red-300">0</p>
+                </div>
+            </div>
+
+            <!-- 商品列表 -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">图片</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">商品名称</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">分类</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">售价</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">库存</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">状态</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody" class="divide-y divide-gray-200 dark:divide-gray-600">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="text-center py-12 hidden">
+                    <p class="text-gray-500 dark:text-gray-400">暂无商品数据</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 商品模态框 -->
     <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden modal">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="p-6">
@@ -131,7 +271,6 @@
                             <label class="block text-sm font-medium mb-2">商品分类</label>
                             <select id="productCategory" required 
                                     class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-base focus:ring-2 focus:ring-primary focus:border-transparent">
-                                <!-- 分类选项将动态生成 -->
                             </select>
                         </div>
 
@@ -187,7 +326,6 @@
 
                 <div class="max-h-48 overflow-y-auto">
                     <ul id="categoryList" class="space-y-2">
-                        <!-- 分类列表将动态生成 -->
                     </ul>
                 </div>
 
@@ -231,42 +369,137 @@
             }
         });
 
-        // 数据存储
+        // 全局变量
         let products = [];
         let categories = ['电子产品', '服装', '食品', '书籍', '家居用品'];
-        let currentUser = 'admin';
+        let currentUser = null;
         let editingProductId = null;
         let deleteProductId = null;
 
+        // 用户数据存储键名
+        const USERS_KEY = 'product_manager_users';
+        const CURRENT_USER_KEY = 'product_manager_current_user';
+        const PRODUCTS_KEY = 'product_manager_products';
+        const CATEGORIES_KEY = 'product_manager_categories';
+
         // DOM 元素
+        const loginScreen = document.getElementById('loginScreen');
+        const registerScreen = document.getElementById('registerScreen');
+        const mainApp = document.getElementById('mainApp');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
         const productModal = document.getElementById('productModal');
         const categoryModal = document.getElementById('categoryModal');
         const deleteModal = document.getElementById('deleteModal');
         const productForm = document.getElementById('productForm');
         const searchInput = document.getElementById('searchInput');
-        const userRoleSelect = document.getElementById('userRole');
-        const userStatus = document.getElementById('userStatus');
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            renderProducts();
-            renderCategories();
-            updateStats();
+            initializeUsers();
+            loadData();
+            checkLoginStatus();
             setupEventListeners();
         });
 
+        // 初始化默认用户
+        function initializeUsers() {
+            const users = getUsers();
+            if (users.length === 0) {
+                const defaultUsers = [
+                    { username: 'admin', password: '123456', role: 'admin' },
+                    { username: 'staff', password: '123456', role: 'employee' }
+                ];
+                saveUsers(defaultUsers);
+            }
+        }
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const savedUser = getSavedUser();
+            if (savedUser) {
+                currentUser = savedUser;
+                showMainApp();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        // 显示登录界面
+        function showLoginScreen() {
+            loginScreen.classList.remove('hidden');
+            registerScreen.classList.add('hidden');
+            mainApp.classList.add('hidden');
+        }
+
+        // 显示注册界面
+        function showRegisterForm() {
+            loginScreen.classList.add('hidden');
+            registerScreen.classList.remove('hidden');
+            document.getElementById('registerError').classList.add('hidden');
+        }
+
+        // 返回登录界面
+        function showLoginForm() {
+            registerScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        // 显示主应用
+        function showMainApp() {
+            loginScreen.classList.add('hidden');
+            registerScreen.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            
+            updateUserInfo();
+            renderProducts();
+            renderCategories();
+            updateStats();
+        }
+
+        // 更新用户信息显示
+        function updateUserInfo() {
+            document.getElementById('userWelcome').textContent = `欢迎，${currentUser.username}`;
+            document.getElementById('userRoleBadge').textContent = currentUser.role === 'admin' ? '管理员' : '员工';
+        }
+
+        // 快速登录
+        function quickLogin(role) {
+            const username = role === 'admin' ? 'admin' : 'staff';
+            const password = '123456';
+            
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginPassword').value = password;
+            
+            // 触发登录
+            setTimeout(() => {
+                loginForm.dispatchEvent(new Event('submit'));
+            }, 100);
+        }
+
         // 设置事件监听器
         function setupEventListeners() {
+            // 登录表单
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+
+            // 注册表单
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleRegister();
+            });
+
+            // 退出登录
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                handleLogout();
+            });
+
             // 搜索功能
             searchInput.addEventListener('input', function() {
                 renderProducts(this.value);
-            });
-
-            // 用户角色切换
-            userRoleSelect.addEventListener('change', function() {
-                currentUser = this.value;
-                userStatus.textContent = `当前身份: ${this.value === 'admin' ? '管理员' : '员工'}`;
-                renderProducts();
             });
 
             // 添加商品按钮
@@ -330,6 +563,146 @@
             });
         }
 
+        // 处理登录
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const errorDiv = document.getElementById('loginError');
+
+            const users = getUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                if (rememberMe) {
+                    saveCurrentUser(user);
+                }
+                showMainApp();
+                errorDiv.classList.add('hidden');
+            } else {
+                errorDiv.textContent = '用户名或密码错误';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        // 处理注册
+        function handleRegister() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.getElementById('registerRole').value;
+            const errorDiv = document.getElementById('registerError');
+
+            // 验证密码
+            if (password.length < 6) {
+                errorDiv.textContent = '密码至少需要6位';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = '两次输入的密码不一致';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            // 检查用户名是否已存在
+            const users = getUsers();
+            if (users.find(u => u.username === username)) {
+                errorDiv.textContent = '用户名已存在';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            // 创建新用户
+            const newUser = { username, password, role };
+            users.push(newUser);
+            saveUsers(users);
+
+            // 自动登录
+            currentUser = newUser;
+            saveCurrentUser(newUser);
+            showMainApp();
+        }
+
+        // 处理退出登录
+        function handleLogout() {
+            currentUser = null;
+            clearSavedUser();
+            showLoginScreen();
+            
+            // 清空表单
+            loginForm.reset();
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        // 存储操作
+        function getUsers() {
+            try {
+                return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveUsers(users) {
+            try {
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            } catch (e) {
+                console.error('无法保存用户数据:', e);
+            }
+        }
+
+        function getSavedUser() {
+            try {
+                return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+            } catch {
+                return null;
+            }
+        }
+
+        function saveCurrentUser(user) {
+            try {
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            } catch (e) {
+                console.error('无法保存当前用户:', e);
+            }
+        }
+
+        function clearSavedUser() {
+            try {
+                localStorage.removeItem(CURRENT_USER_KEY);
+            } catch (e) {
+                console.error('无法清除用户数据:', e);
+            }
+        }
+
+        function loadData() {
+            try {
+                const savedProducts = localStorage.getItem(PRODUCTS_KEY);
+                const savedCategories = localStorage.getItem(CATEGORIES_KEY);
+                
+                if (savedProducts) {
+                    products = JSON.parse(savedProducts);
+                }
+                if (savedCategories) {
+                    categories = JSON.parse(savedCategories);
+                }
+            } catch (e) {
+                console.error('加载数据失败:', e);
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+                localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+            } catch (e) {
+                console.error('保存数据失败:', e);
+            }
+        }
+
         // 渲染商品列表
         function renderProducts(searchTerm = '') {
             const tbody = document.getElementById('productTableBody');
@@ -374,7 +747,7 @@
                             <button onclick="editProduct(${product.id})" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">
                                 编辑
                             </button>
-                            ${currentUser === 'admin' ? 
+                            ${currentUser.role === 'admin' ? 
                                 `<button onclick="showDeleteModal(${product.id})" class="text-red-600 dark:text-red-400 hover:underline text-sm">
                                     删除
                                 </button>` : ''
@@ -485,6 +858,7 @@
                 products.push(productData);
             }
             
+            saveData();
             renderProducts();
             updateStats();
             closeProductModal();
@@ -500,7 +874,7 @@
 
         // 显示删除确认模态框
         function showDeleteModal(id) {
-            if (currentUser !== 'admin') return;
+            if (currentUser.role !== 'admin') return;
             deleteProductId = id;
             deleteModal.classList.remove('hidden');
         }
@@ -514,6 +888,7 @@
         // 删除商品
         function deleteProduct(id) {
             products = products.filter(p => p.id !== id);
+            saveData();
             renderProducts();
             updateStats();
         }
@@ -537,6 +912,7 @@
             if (newCategory && !categories.includes(newCategory)) {
                 categories.push(newCategory);
                 input.value = '';
+                saveData();
                 renderCategories();
             }
         }
@@ -545,40 +921,10 @@
         function removeCategory(category) {
             if (categories.length > 1) {
                 categories = categories.filter(c => c !== category);
+                saveData();
                 renderCategories();
             }
         }
-
-        // 初始化示例数据
-        function initSampleData() {
-            const sampleProducts = [
-                {
-                    id: 1,
-                    name: 'iPhone 15 Pro',
-                    category: '电子产品',
-                    price: 7999,
-                    stock: 10,
-                    sold: false,
-                    image: null
-                },
-                {
-                    id: 2,
-                    name: '棉质T恤',
-                    category: '服装',
-                    price: 99,
-                    stock: 50,
-                    sold: true,
-                    image: null
-                }
-            ];
-            
-            products = sampleProducts;
-            renderProducts();
-            updateStats();
-        }
-
-        // 加载示例数据
-        initSampleData();
     </script>
 </body>
 </html>
